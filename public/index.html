@@ -12,7 +12,7 @@
       <span class="logo">MX</span>
       <div>
         <h1>Amazon México · Deals</h1>
-        <p class="tagline">Vinyl · CD · Games — rastreador local</p>
+        <p class="tagline">Vinyl · CD · Games — rastreador local · Last.fm</p>
       </div>
     </div>
     <div class="stats" id="stats">Cargando…</div>
@@ -35,6 +35,14 @@
         <input type="checkbox" id="priceErrorOnly" />
         <span>Solo price error</span>
       </label>
+      <label class="toggle" title="Ordenar por afinidad Last.fm">
+        <input type="checkbox" id="matchLastfm" />
+        <span>Match Last.fm</span>
+      </label>
+      <label class="field">
+        <span>Mín. Last.fm</span>
+        <input type="number" id="minLastfm" min="0" max="100" step="1" placeholder="0" />
+      </label>
       <label class="field">
         <span>Máx. total MXN</span>
         <input type="number" id="maxTotal" min="0" step="1" placeholder="ej. 500" />
@@ -49,6 +57,7 @@
           <option value="price" selected>Precio</option>
           <option value="total">Total</option>
           <option value="found_at">Más reciente</option>
+          <option value="lastfm_match">Match Last.fm</option>
         </select>
       </label>
     </div>
@@ -60,7 +69,7 @@
   </main>
 
   <footer>
-    <span>API: <code>/api/items</code> · Melanio puede hacer POST upsert</span>
+    <span>API: <code>/api/items</code> · <code>/api/taste</code> · Melanio puede hacer POST upsert</span>
   </footer>
 
   <script src="/app.js"></script>

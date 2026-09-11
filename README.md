@@ -28,7 +28,8 @@ Items live in `data/items.json` (copied from `/workspace/amazon-mx-deals-data/se
 | Method | Path | Notes |
 |--------|------|--------|
 | GET | `/api/health` | Health + item count |
-| GET | `/api/items` | Filter/sort list |
+| GET | `/api/taste` | Last.fm taste snapshot (`data/taste-lastfm.json`) |
+| GET | `/api/items` | Filter/sort list (includes `lastfm_score`) |
 | GET | `/api/items/:id` | One item |
 | POST | `/api/items` | Upsert one object or array (idempotent by `id`) |
 
@@ -40,7 +41,8 @@ Items live in `data/items.json` (copied from `/workspace/amazon-mx-deals-data/se
 - `is_price_error` — `true` \| `false`
 - `max_total_mxn` — number
 - `q` — search title / artist_or_publisher
-- `sort` — `price` (default) \| `total` \| `found_at`
+- `sort` — `price` (default) \| `total` \| `found_at` \| `lastfm_match`
+- `min_lastfm_score` — number 0–100 (vinyl/cd affinity filter)
 
 ### Melanio — POST `/api/items` contract
 

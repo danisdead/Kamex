@@ -148,3 +148,5 @@ footer code { color: var(--accent); }
   color: var(--muted);
   border-color: rgba(139, 148, 158, 0.35);
 }
+
+.badge.affinity.none { display: none; }

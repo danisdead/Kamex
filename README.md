@@ -1,12 +1,15 @@
-# Amazon MX Deals
+# Amazon MX Deals (Kamex)
 
 Local fullstack microsite to browse Amazon México deal finds (vinyl, CD, games).
+
+**Stack:** Express API + React (Vite) frontend, Jest unit tests for filter/Last.fm helpers.
 
 ## Run
 
 ```bash
 cd /workspace/amazon-mx-deals
 npm install
+npm run build
 npm start
 ```
 
@@ -19,9 +22,25 @@ Optional env:
 PORT=3847 HOST=0.0.0.0 npm start
 ```
 
+### Development
+
+```bash
+# Terminal 1 — API (serves dist if built; or use proxy from Vite)
+npm run dev:server
+
+# Terminal 2 — Vite React HMR (proxies /api → :3847)
+npm run dev
+```
+
+### Tests
+
+```bash
+npm test
+```
+
 ## Seed data
 
-Items live in `data/items.json` (copied from `/workspace/amazon-mx-deals-data/seed-all.json` at setup). The app does not depend on paths outside this project.
+Items live in `data/items.json`. Last.fm taste snapshot in `data/taste-lastfm.json`. The app does not depend on paths outside this project.
 
 ## API
 
@@ -94,8 +113,20 @@ Response shape:
 
 `id`, `title`, `artist_or_publisher`, `category` (`vinyl`\|`cd`\|`game`), `subcategory`, `price_mxn`, `list_price_mxn`, `shipping_mxn`, `total_mxn`, `condition`, `url`, `is_price_error`, `price_error_reason`, `found_at`, `source`, `free_shipping` (boolean).
 
+Enriched on read: `lastfm_score`, `lastfm_match`.
+
 ## UI defaults
 
 - Free shipping filter **ON**
 - Sort by price
 - Category tabs: Todos / Vinyl / CD / Games
+- Badges: ENVÍO GRATIS, PRICE ERROR, Last.fm affinity
+- Match Last.fm toggle sorts by `lastfm_match` and sets min score ≥ 1
+
+## Project layout
+
+- `server.js` — Express API + static `dist/`
+- `src/` — React (Vite) UI
+- `lib/` — shared pure helpers (Last.fm scoring, filters, format)
+- `__tests__/` — Jest unit tests
+- `data/` — `items.json`, `taste-lastfm.json`

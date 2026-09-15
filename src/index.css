@@ -149,17 +149,29 @@ h1 { margin: 0; font-size: 1.35rem; font-weight: 700; }
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
 }
 .theme-picker {
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  font-size: 0.8rem; color: var(--muted);
+  display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+  font-size: 0.8rem; color: var(--muted); max-width: 100%;
 }
-.theme-picker label { font-weight: 600; letter-spacing: 0.02em; }
-.theme-picker select {
-  background: var(--panel); color: var(--text); border: 1px solid var(--border);
+.theme-picker-label {
+  font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  font-size: 0.72rem; color: var(--muted); flex: 0 0 auto;
+}
+.theme-segment {
+  display: inline-flex; flex-wrap: wrap; align-items: stretch;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 999px;
+  padding: 0.15rem; gap: 0.15rem; box-shadow: var(--shadow);
+}
+.theme-seg {
+  background: transparent; color: var(--text); border: 1px solid transparent;
   border-radius: 999px; padding: 0.4rem 0.85rem; font-size: 0.85rem; font-weight: 600;
-  cursor: pointer; box-shadow: var(--shadow);
+  cursor: pointer; line-height: 1.2; white-space: nowrap;
 }
-.theme-picker select:focus {
-  outline: 2px solid var(--accent-dim); border-color: var(--accent);
+.theme-seg:hover { border-color: var(--accent-dim); }
+.theme-seg.active {
+  background: var(--accent); color: var(--accent-contrast); border-color: var(--accent);
+}
+.theme-seg:focus-visible {
+  outline: 2px solid var(--accent-dim); outline-offset: 1px;
 }
 
 .stats {

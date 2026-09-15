@@ -103,8 +103,8 @@ export default function App() {
     });
   }
 
-  function onThemeChange(e) {
-    setTheme(applyTheme(e.target.value));
+  function onThemeChange(id) {
+    setTheme(applyTheme(id));
   }
 
   return (
@@ -118,20 +118,24 @@ export default function App() {
           </div>
         </div>
         <div className="top-actions">
-          <div className="theme-picker">
-            <label htmlFor="theme-select">Tema</label>
-            <select
-              id="theme-select"
-              value={theme}
-              onChange={onThemeChange}
-              aria-label="Tema"
-            >
+          <div className="theme-picker" role="group" aria-label="Tema">
+            <span className="theme-picker-label" id="theme-label">
+              Tema
+            </span>
+            <div className="theme-segment" role="radiogroup" aria-labelledby="theme-label">
               {THEME_IDS.map((id) => (
-                <option key={id} value={id}>
+                <button
+                  key={id}
+                  type="button"
+                  role="radio"
+                  aria-checked={theme === id}
+                  className={`theme-seg${theme === id ? ' active' : ''}`}
+                  onClick={() => onThemeChange(id)}
+                >
                   {THEME_LABELS[id]}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </div>
           <div className="stats">{stats}</div>
         </div>

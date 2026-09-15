@@ -2,6 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Filters from './components/Filters.jsx';
 import DealCard from './components/DealCard.jsx';
 import { buildQuery } from './lib/format.js';
+import {
+  THEME_IDS,
+  THEME_LABELS,
+  applyTheme,
+  loadStoredTheme,
+} from './lib/theme.js';
 
 const INITIAL = {
   category: 'all',
@@ -19,9 +25,14 @@ export default function App() {
   const [stats, setStats] = useState('Cargando…');
   const [emptyMsg, setEmptyMsg] = useState('No hay deals con estos filtros.');
   const [showEmpty, setShowEmpty] = useState(false);
+  const [theme, setTheme] = useState(() => loadStoredTheme());
   const debounceRef = useRef(null);
   const stateRef = useRef(state);
   stateRef.current = state;
+
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
 
   const load = useCallback(async (nextState) => {
     const s = nextState || stateRef.current;
@@ -92,6 +103,10 @@ export default function App() {
     });
   }
 
+  function onThemeChange(e) {
+    setTheme(applyTheme(e.target.value));
+  }
+
   return (
     <>
       <header className="top">
@@ -102,7 +117,24 @@ export default function App() {
             <p className="tagline">Vinyl · CD · Games — rastreador local · Last.fm</p>
           </div>
         </div>
-        <div className="stats">{stats}</div>
+        <div className="top-actions">
+          <div className="theme-picker">
+            <label htmlFor="theme-select">Tema</label>
+            <select
+              id="theme-select"
+              value={theme}
+              onChange={onThemeChange}
+              aria-label="Tema"
+            >
+              {THEME_IDS.map((id) => (
+                <option key={id} value={id}>
+                  {THEME_LABELS[id]}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="stats">{stats}</div>
+        </div>
       </header>
 
       <Filters

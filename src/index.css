@@ -1,4 +1,6 @@
-:root {
+/* Default / Kamex — dark orange Amazon-MX-deals look */
+:root,
+[data-theme="default"] {
   --bg: #0d1117;
   --panel: #161b22;
   --panel-2: #1c2128;
@@ -7,14 +9,122 @@
   --muted: #8b949e;
   --accent: #ff9900;
   --accent-dim: #cc7a00;
+  --accent-hover: #ffb84d;
+  --accent-contrast: #111;
   --good: #3fb950;
   --warn: #f85149;
   --vinyl: #a371f7;
   --cd: #58a6ff;
   --game: #3fb950;
+  --vinyl-bg: rgba(163, 113, 247, 0.15);
+  --vinyl-border: rgba(163, 113, 247, 0.35);
+  --cd-bg: rgba(88, 166, 255, 0.15);
+  --cd-border: rgba(88, 166, 255, 0.35);
+  --game-bg: rgba(63, 185, 80, 0.15);
+  --game-border: rgba(63, 185, 80, 0.35);
+  --warn-bg: rgba(248, 81, 73, 0.15);
+  --warn-border: rgba(248, 81, 73, 0.4);
+  --good-bg: rgba(63, 185, 80, 0.12);
+  --good-border: rgba(63, 185, 80, 0.35);
+  --affinity-bg: rgba(255, 153, 0, 0.12);
+  --affinity-fg: #ffb84d;
+  --affinity-border: rgba(255, 153, 0, 0.4);
+  --affinity-high-bg: rgba(63, 185, 80, 0.15);
+  --affinity-high-border: rgba(63, 185, 80, 0.45);
+  --affinity-mid-bg: rgba(255, 153, 0, 0.15);
+  --affinity-mid-border: rgba(255, 153, 0, 0.45);
+  --affinity-low-bg: rgba(139, 148, 158, 0.12);
+  --affinity-low-border: rgba(139, 148, 158, 0.35);
+  --logo-from: var(--accent);
+  --logo-to: #ff6600;
+  --hud-glow: transparent;
   --radius: 12px;
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* Dracula — VS Code Dracula palette */
+[data-theme="dracula"] {
+  --bg: #282a36;
+  --panel: #21222c;
+  --panel-2: #44475a;
+  --border: #6272a4;
+  --text: #f8f8f2;
+  --muted: #6272a4;
+  --accent: #bd93f9;
+  --accent-dim: #9580c9;
+  --accent-hover: #d6b8ff;
+  --accent-contrast: #282a36;
+  --good: #50fa7b;
+  --warn: #ff5555;
+  --vinyl: #bd93f9;
+  --cd: #8be9fd;
+  --game: #50fa7b;
+  --vinyl-bg: rgba(189, 147, 249, 0.18);
+  --vinyl-border: rgba(189, 147, 249, 0.4);
+  --cd-bg: rgba(139, 233, 253, 0.15);
+  --cd-border: rgba(139, 233, 253, 0.4);
+  --game-bg: rgba(80, 250, 123, 0.15);
+  --game-border: rgba(80, 250, 123, 0.4);
+  --warn-bg: rgba(255, 85, 85, 0.18);
+  --warn-border: rgba(255, 85, 85, 0.45);
+  --good-bg: rgba(80, 250, 123, 0.12);
+  --good-border: rgba(80, 250, 123, 0.4);
+  --affinity-bg: rgba(255, 184, 108, 0.15);
+  --affinity-fg: #ffb86c;
+  --affinity-border: rgba(255, 184, 108, 0.45);
+  --affinity-high-bg: rgba(80, 250, 123, 0.18);
+  --affinity-high-border: rgba(80, 250, 123, 0.5);
+  --affinity-mid-bg: rgba(241, 250, 140, 0.15);
+  --affinity-mid-border: rgba(241, 250, 140, 0.45);
+  --affinity-low-bg: rgba(98, 114, 164, 0.2);
+  --affinity-low-border: rgba(98, 114, 164, 0.45);
+  --logo-from: #bd93f9;
+  --logo-to: #ff79c6;
+  --hud-glow: transparent;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+/* Evangelion — Eva-inspired HUD (tasteful, geometric accents via CSS vars) */
+[data-theme="evangelion"] {
+  --bg: #0a0612;
+  --panel: #12081f;
+  --panel-2: #1a0f2e;
+  --border: #4a1d7a;
+  --text: #f0e6ff;
+  --muted: #9b7ab8;
+  --accent: #39ff14;
+  --accent-dim: #2bc410;
+  --accent-hover: #6dff4d;
+  --accent-contrast: #0a0612;
+  --good: #39ff14;
+  --warn: #ff2a2a;
+  --vinyl: #9d4edd;
+  --cd: #7b2cbf;
+  --game: #39ff14;
+  --vinyl-bg: rgba(157, 78, 221, 0.2);
+  --vinyl-border: rgba(157, 78, 221, 0.5);
+  --cd-bg: rgba(123, 44, 191, 0.22);
+  --cd-border: rgba(123, 44, 191, 0.5);
+  --game-bg: rgba(57, 255, 20, 0.12);
+  --game-border: rgba(57, 255, 20, 0.4);
+  --warn-bg: rgba(255, 42, 42, 0.18);
+  --warn-border: rgba(255, 42, 42, 0.5);
+  --good-bg: rgba(57, 255, 20, 0.1);
+  --good-border: rgba(57, 255, 20, 0.35);
+  --affinity-bg: rgba(157, 78, 221, 0.18);
+  --affinity-fg: #c77dff;
+  --affinity-border: rgba(157, 78, 221, 0.5);
+  --affinity-high-bg: rgba(57, 255, 20, 0.15);
+  --affinity-high-border: rgba(57, 255, 20, 0.45);
+  --affinity-mid-bg: rgba(255, 184, 0, 0.15);
+  --affinity-mid-border: rgba(255, 184, 0, 0.45);
+  --affinity-low-bg: rgba(155, 122, 184, 0.15);
+  --affinity-low-border: rgba(155, 122, 184, 0.4);
+  --logo-from: #7b2cbf;
+  --logo-to: #39ff14;
+  --hud-glow: rgba(123, 44, 191, 0.35);
+  --shadow: 0 0 0 1px rgba(57, 255, 20, 0.08), 0 8px 28px rgba(0, 0, 0, 0.55);
 }
 
 * { box-sizing: border-box; }
@@ -28,12 +138,30 @@ body { max-width: 1200px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
 .brand { display: flex; gap: 0.9rem; align-items: center; }
 .logo {
   width: 48px; height: 48px; border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent), #ff6600);
-  color: #111; font-weight: 800; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--logo-from), var(--logo-to));
+  color: var(--accent-contrast); font-weight: 800; display: grid; place-items: center;
   letter-spacing: -0.5px; box-shadow: var(--shadow);
 }
 h1 { margin: 0; font-size: 1.35rem; font-weight: 700; }
 .tagline { margin: 0.15rem 0 0; color: var(--muted); font-size: 0.85rem; }
+
+.top-actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+}
+.theme-picker {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  font-size: 0.8rem; color: var(--muted);
+}
+.theme-picker label { font-weight: 600; letter-spacing: 0.02em; }
+.theme-picker select {
+  background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  border-radius: 999px; padding: 0.4rem 0.85rem; font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; box-shadow: var(--shadow);
+}
+.theme-picker select:focus {
+  outline: 2px solid var(--accent-dim); border-color: var(--accent);
+}
+
 .stats {
   background: var(--panel); border: 1px solid var(--border); border-radius: 999px;
   padding: 0.45rem 0.9rem; color: var(--muted); font-size: 0.85rem;
@@ -49,7 +177,7 @@ h1 { margin: 0; font-size: 1.35rem; font-weight: 700; }
   border-radius: 999px; padding: 0.4rem 0.95rem; cursor: pointer; font-weight: 600;
 }
 .tab:hover { border-color: var(--accent-dim); }
-.tab.active { background: var(--accent); color: #111; border-color: var(--accent); }
+.tab.active { background: var(--accent); color: var(--accent-contrast); border-color: var(--accent); }
 
 .controls {
   display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; align-items: flex-end;
@@ -76,20 +204,25 @@ h1 { margin: 0; font-size: 1.35rem; font-weight: 700; }
 .card {
   background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 1rem; display: flex; flex-direction: column; gap: 0.65rem;
-  transition: border-color 0.15s, transform 0.15s;
+  transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 0 0 0 var(--hud-glow);
 }
-.card:hover { border-color: var(--accent-dim); transform: translateY(-2px); }
+.card:hover {
+  border-color: var(--accent-dim);
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px -4px var(--hud-glow);
+}
 .card-top { display: flex; justify-content: space-between; gap: 0.5rem; align-items: flex-start; }
 .badges { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .badge {
   font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
   padding: 0.2rem 0.5rem; border-radius: 999px; border: 1px solid transparent;
 }
-.badge.vinyl { background: rgba(163, 113, 247, 0.15); color: var(--vinyl); border-color: rgba(163, 113, 247, 0.35); }
-.badge.cd { background: rgba(88, 166, 255, 0.15); color: var(--cd); border-color: rgba(88, 166, 255, 0.35); }
-.badge.game { background: rgba(63, 185, 80, 0.15); color: var(--game); border-color: rgba(63, 185, 80, 0.35); }
-.badge.error { background: rgba(248, 81, 73, 0.15); color: var(--warn); border-color: rgba(248, 81, 73, 0.4); }
-.badge.ship { background: rgba(63, 185, 80, 0.12); color: var(--good); border-color: rgba(63, 185, 80, 0.35); }
+.badge.vinyl { background: var(--vinyl-bg); color: var(--vinyl); border-color: var(--vinyl-border); }
+.badge.cd { background: var(--cd-bg); color: var(--cd); border-color: var(--cd-border); }
+.badge.game { background: var(--game-bg); color: var(--game); border-color: var(--game-border); }
+.badge.error { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
+.badge.ship { background: var(--good-bg); color: var(--good); border-color: var(--good-border); }
 
 .card h2 { margin: 0; font-size: 1.05rem; line-height: 1.3; }
 .artist { margin: 0; color: var(--muted); font-size: 0.9rem; }
@@ -107,10 +240,10 @@ h1 { margin: 0; font-size: 1.35rem; font-weight: 700; }
 
 .card a.cta {
   display: inline-flex; justify-content: center; align-items: center;
-  background: var(--accent); color: #111; text-decoration: none; font-weight: 700;
+  background: var(--accent); color: var(--accent-contrast); text-decoration: none; font-weight: 700;
   border-radius: 8px; padding: 0.55rem 0.75rem; margin-top: 0.15rem;
 }
-.card a.cta:hover { background: #ffb84d; }
+.card a.cta:hover { background: var(--accent-hover); }
 .reason { font-size: 0.78rem; color: var(--warn); margin: 0; }
 
 .empty { text-align: center; color: var(--muted); padding: 2.5rem 1rem; }
@@ -123,9 +256,9 @@ footer {
 footer code { color: var(--accent); }
 
 .badge.affinity {
-  background: rgba(255, 153, 0, 0.12);
-  color: #ffb84d;
-  border-color: rgba(255, 153, 0, 0.4);
+  background: var(--affinity-bg);
+  color: var(--affinity-fg);
+  border-color: var(--affinity-border);
   text-transform: none;
   letter-spacing: 0;
   max-width: 100%;
@@ -134,19 +267,28 @@ footer code { color: var(--accent); }
   white-space: nowrap;
 }
 .badge.affinity.high {
-  background: rgba(63, 185, 80, 0.15);
+  background: var(--affinity-high-bg);
   color: var(--good);
-  border-color: rgba(63, 185, 80, 0.45);
+  border-color: var(--affinity-high-border);
 }
 .badge.affinity.mid {
-  background: rgba(255, 153, 0, 0.15);
-  color: #ffb84d;
-  border-color: rgba(255, 153, 0, 0.45);
+  background: var(--affinity-mid-bg);
+  color: var(--affinity-fg);
+  border-color: var(--affinity-mid-border);
 }
 .badge.affinity.low {
-  background: rgba(139, 148, 158, 0.12);
+  background: var(--affinity-low-bg);
   color: var(--muted);
-  border-color: rgba(139, 148, 158, 0.35);
+  border-color: var(--affinity-low-border);
 }
 
 .badge.affinity.none { display: none; }
+
+/* Subtle geometric HUD accent for Evangelion (CSS vars only) */
+[data-theme="evangelion"] .filters {
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(57, 255, 20, 0.12);
+}
+[data-theme="evangelion"] .logo {
+  clip-path: polygon(8% 0, 100% 0, 100% 92%, 92% 100%, 0 100%, 0 8%);
+  border-radius: 0;
+}

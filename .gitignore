@@ -8,3 +8,4 @@ coverage/
 
 data/*.tmp
 data/*.lock
+data/catalog-feed-stamp.json

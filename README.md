@@ -20,7 +20,11 @@ Optional env:
 
 ```bash
 PORT=3847 HOST=0.0.0.0 npm start
+# override the Mingus public catalog gist
+CATALOG_FEED_URL=https://gist.githubusercontent.com/danisdead/96dd3cdc607cf3b12247e2ffbfcf0c1b/raw/catalog.json
 ```
+
+On startup, and every 30 minutes while the process runs, the server fetches that catalog feed (`{ updated_at, source, count, items[] }`) and upserts items by `id` through the same path as `POST /api/items`. If `updated_at` matches the last successful fetch, the upsert is skipped. A down or invalid feed is logged and does not stop the server. The stamp is kept in memory and in `data/catalog-feed-stamp.json` (not committed).
 
 ### Development
 

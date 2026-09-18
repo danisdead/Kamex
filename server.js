@@ -8,6 +8,14 @@ const { enrichWithLastfm } = require('./lib/lastfm');
 const { filterItems, sortItems } = require('./lib/filters');
 const { attachCovers, loadCovers, fillMissingCovers } = require('./lib/covers');
 const { applyBoxSecrets, secretStatus } = require('./lib/secrets');
+const {
+  DEFAULT_CATALOG_FEED_URL,
+  CATALOG_POLL_MS,
+  extractItems,
+  feedUpdatedAt,
+  isUnchangedUpdatedAt,
+  redactUrls,
+} = require('./lib/catalogFeed');
 
 applyBoxSecrets(['DISCOGS_CONSUMER_KEY', 'DISCOGS_CONSUMER_SECRET']);
 for (const secretName of ['DISCOGS_CONSUMER_KEY', 'DISCOGS_CONSUMER_SECRET']) {
@@ -20,6 +28,8 @@ const HOST = process.env.HOST || '0.0.0.0';
 const DATA_PATH = path.join(__dirname, 'data', 'items.json');
 const TASTE_PATH = path.join(__dirname, 'data', 'taste-lastfm.json');
 const DIST_PATH = path.join(__dirname, 'dist');
+const CATALOG_FEED_URL = process.env.CATALOG_FEED_URL || DEFAULT_CATALOG_FEED_URL;
+const CATALOG_STAMP_PATH = path.join(__dirname, 'data', 'catalog-feed-stamp.json');
 
 const app = express();
 app.use(express.json({ limit: '2mb' }));
@@ -62,6 +72,125 @@ function normalizeItem(input) {
     source: input.source ?? 'amazon_mx',
     free_shipping: Boolean(input.free_shipping),
   };
+}
+
+function upsertNormalized(normalized) {
+  const items = loadItems();
+  const byId = new Map(items.map((i) => [i.id, i]));
+  let created = 0;
+  let updated = 0;
+  for (const item of normalized) {
+    if (byId.has(item.id)) {
+      byId.set(item.id, { ...byId.get(item.id), ...item });
+      updated += 1;
+    } else {
+      byId.set(item.id, item);
+      created += 1;
+    }
+  }
+  const next = Array.from(byId.values());
+  saveItems(next);
+  return { created, updated, total: next.length };
+}
+
+function loadCatalogStamp() {
+  try {
+    if (!fs.existsSync(CATALOG_STAMP_PATH)) return null;
+    const data = JSON.parse(fs.readFileSync(CATALOG_STAMP_PATH, 'utf8'));
+    if (!data || data.updated_at == null) return null;
+    const stamp = String(data.updated_at).trim();
+    return stamp || null;
+  } catch {
+    return null;
+  }
+}
+
+function saveCatalogStamp(updatedAt) {
+  if (updatedAt == null || String(updatedAt).trim() === '') return;
+  try {
+    const payload = JSON.stringify({ updated_at: String(updatedAt).trim() }) + '\n';
+    fs.writeFileSync(CATALOG_STAMP_PATH, payload, 'utf8');
+  } catch (err) {
+    console.error(`catalog stamp write failed: ${redactUrls(err && err.message ? err.message : 'error')}`);
+  }
+}
+
+let lastCatalogUpdatedAt = loadCatalogStamp();
+
+async function syncCatalogFeed() {
+  let response;
+  try {
+    response = await fetch(CATALOG_FEED_URL, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(20000),
+    });
+  } catch (err) {
+    console.error(`catalog feed fetch failed: ${redactUrls(err && err.message ? err.message : 'error')}`);
+    return;
+  }
+
+  if (!response.ok) {
+    console.error(`catalog feed HTTP ${response.status}`);
+    return;
+  }
+
+  let feed;
+  try {
+    feed = await response.json();
+  } catch (err) {
+    console.error(`catalog feed parse failed: ${redactUrls(err && err.message ? err.message : 'error')}`);
+    return;
+  }
+
+  if (!feed || typeof feed !== 'object' || Array.isArray(feed) || !Array.isArray(feed.items)) {
+    console.error('catalog feed missing items array; skip upsert');
+    return;
+  }
+
+  const updatedAt = feedUpdatedAt(feed);
+  if (isUnchangedUpdatedAt(lastCatalogUpdatedAt, updatedAt)) {
+    console.log(`catalog feed unchanged updated_at=${updatedAt}; skip upsert`);
+    return;
+  }
+
+  const normalized = [];
+  let skipped = 0;
+  for (const raw of extractItems(feed)) {
+    const item = normalizeItem(raw);
+    if (!item) {
+      skipped += 1;
+      continue;
+    }
+    normalized.push(item);
+  }
+
+  if (!normalized.length) {
+    console.error(`catalog feed had no valid items (skipped=${skipped}); not updating stamp`);
+    return;
+  }
+
+  try {
+    const result = upsertNormalized(normalized);
+    lastCatalogUpdatedAt = updatedAt;
+    if (updatedAt) saveCatalogStamp(updatedAt);
+    console.log(
+      `catalog feed upserted created=${result.created} updated=${result.updated} total=${result.total} skipped=${skipped} updated_at=${updatedAt || 'none'}`
+    );
+  } catch (err) {
+    console.error(`catalog feed upsert failed: ${redactUrls(err && err.message ? err.message : 'error')}`);
+  }
+}
+
+function startCatalogFeedLoop() {
+  const run = () => {
+    syncCatalogFeed().catch((err) => {
+      console.error(`catalog feed sync failed: ${redactUrls(err && err.message ? err.message : 'error')}`);
+    });
+  };
+  run();
+  const timer = setInterval(run, CATALOG_POLL_MS);
+  if (typeof timer.unref === 'function') timer.unref();
+  console.log('catalog feed poll every 30m');
 }
 
 app.get('/api/health', (_req, res) => {
@@ -163,22 +292,8 @@ app.post('/api/items', (req, res) => {
       normalized.push(item);
     }
 
-    const items = loadItems();
-    const byId = new Map(items.map((i) => [i.id, i]));
-    let created = 0;
-    let updated = 0;
-    for (const item of normalized) {
-      if (byId.has(item.id)) {
-        byId.set(item.id, { ...byId.get(item.id), ...item });
-        updated += 1;
-      } else {
-        byId.set(item.id, item);
-        created += 1;
-      }
-    }
-    const next = Array.from(byId.values());
-    saveItems(next);
-    res.json({ ok: true, created, updated, total: next.length });
+    const result = upsertNormalized(normalized);
+    res.json({ ok: true, created: result.created, updated: result.updated, total: result.total });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -200,6 +315,7 @@ if (fs.existsSync(DIST_PATH)) {
 app.listen(PORT, HOST, () => {
   console.log(`amazon-mx-deals listening on http://${HOST}:${PORT}`);
   console.log(`local URL: http://127.0.0.1:${PORT}`);
+  startCatalogFeedLoop();
   if (process.env.DISCOGS_FILL === '0') return;
   fillMissingCovers()
     .then((result) => {

@@ -225,6 +225,14 @@ h1 { margin: 0; font-size: 1.35rem; font-weight: 700; }
   box-shadow: 0 0 18px -4px var(--hud-glow);
 }
 .card-top { display: flex; justify-content: space-between; gap: 0.5rem; align-items: flex-start; }
+.cover {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  background: var(--panel-2);
+  display: block;
+}
 .badges { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .badge {
   font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;

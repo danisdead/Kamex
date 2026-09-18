@@ -6,6 +6,14 @@ const path = require('path');
 
 const { enrichWithLastfm } = require('./lib/lastfm');
 const { filterItems, sortItems } = require('./lib/filters');
+const { attachCovers, loadCovers, fillMissingCovers } = require('./lib/covers');
+const { applyBoxSecrets, secretStatus } = require('./lib/secrets');
+
+applyBoxSecrets(['DISCOGS_CONSUMER_KEY', 'DISCOGS_CONSUMER_SECRET']);
+for (const secretName of ['DISCOGS_CONSUMER_KEY', 'DISCOGS_CONSUMER_SECRET']) {
+  const s = secretStatus(secretName);
+  console.log(`${secretName} ${s.status} len=${s.length}`);
+}
 
 const PORT = Number(process.env.PORT) || 3847;
 const HOST = process.env.HOST || '0.0.0.0';
@@ -95,6 +103,7 @@ app.get('/api/taste', (_req, res) => {
 app.get('/api/items', (req, res) => {
   try {
     let items = enrichWithLastfm(loadItems(), loadTaste());
+    items = attachCovers(items, loadCovers());
     items = filterItems(items, {
       category: req.query.category,
       subcategory: req.query.subcategory,
@@ -113,10 +122,29 @@ app.get('/api/items', (req, res) => {
 
 app.get('/api/items/:id', (req, res) => {
   try {
-    const items = enrichWithLastfm(loadItems(), loadTaste());
+    const items = attachCovers(enrichWithLastfm(loadItems(), loadTaste()), loadCovers());
     const item = items.find((i) => i.id === req.params.id);
     if (!item) return res.status(404).json({ error: 'not found' });
     res.json(item);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/covers/:id', (req, res) => {
+  try {
+    const cache = loadCovers();
+    const id = req.params.id;
+    if (!Object.prototype.hasOwnProperty.call(cache, id)) {
+      return res.status(404).json({ error: 'not cached', id, cover_url: null });
+    }
+    const entry = cache[id] || {};
+    res.json({
+      id,
+      cover_url: entry.cover_url || null,
+      discogs_id: entry.discogs_id ?? null,
+      queried_at: entry.queried_at || null,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -172,4 +200,12 @@ if (fs.existsSync(DIST_PATH)) {
 app.listen(PORT, HOST, () => {
   console.log(`amazon-mx-deals listening on http://${HOST}:${PORT}`);
   console.log(`local URL: http://127.0.0.1:${PORT}`);
+  if (process.env.DISCOGS_FILL === '0') return;
+  fillMissingCovers()
+    .then((result) => {
+      console.log(`covers summary ${JSON.stringify(result)}`);
+    })
+    .catch((err) => {
+      console.error(`covers fill failed: ${err && err.message ? err.message : 'error'}`);
+    });
 });

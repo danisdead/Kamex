@@ -20,8 +20,23 @@ export default function DealCard({ item }) {
         .join(' · ')
     : 'Last.fm affinity';
 
+  const showCover =
+    Boolean(item.cover_url) &&
+    (item.category === 'vinyl' || item.category === 'cd');
+
   return (
     <article className="card">
+      {showCover && (
+        <img
+          className="cover"
+          src={item.cover_url}
+          alt={item.title ? `Portada: ${item.title}` : 'Portada'}
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.remove();
+          }}
+        />
+      )}
       <div className="card-top">
         <div className="badges">
           <span className={`badge ${item.category || ''}`}>

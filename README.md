@@ -40,7 +40,9 @@ npm test
 
 ## Seed data
 
-Items live in `data/items.json`. Last.fm taste snapshot in `data/taste-lastfm.json`. The app does not depend on paths outside this project.
+Items live in `data/items.json`. Last.fm taste snapshot in `data/taste-lastfm.json`. Discogs cover cache is `data/covers.json` (urls only, including negative misses). The app does not depend on paths outside this project.
+
+Vinyl and CD cards show a thumbnail when `cover_url` is set. Games never get cover art. The item list reads the cache only; `npm run covers:fill` (or server startup) queries Discogs in the background. Discogs credentials are `DISCOGS_CONSUMER_KEY` and `DISCOGS_CONSUMER_SECRET` in the process environment (never committed).
 
 ## API
 
@@ -48,8 +50,9 @@ Items live in `data/items.json`. Last.fm taste snapshot in `data/taste-lastfm.js
 |--------|------|--------|
 | GET | `/api/health` | Health + item count |
 | GET | `/api/taste` | Last.fm taste snapshot (`data/taste-lastfm.json`) |
-| GET | `/api/items` | Filter/sort list (includes `lastfm_score`) |
+| GET | `/api/items` | Filter/sort list (includes `lastfm_score`; vinyl/cd also include `cover_url`) |
 | GET | `/api/items/:id` | One item |
+| GET | `/api/covers/:id` | Cached Discogs cover (`cover_url` or null). No live Discogs call. |
 | POST | `/api/items` | Upsert one object or array (idempotent by `id`) |
 
 ### Query params for `GET /api/items`
